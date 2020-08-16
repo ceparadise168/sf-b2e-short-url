@@ -1,61 +1,86 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+## 簡易縮址服務
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+### 建立短網址
 
-## About Laravel
+#### Request
+`curl -X POST 'http://127.0.0.1:8000/url?url=https://laravel.com/docs/7.x/controllers'`
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+#### Response
+回傳短網址代號
+`{"urlSequence":"5","url":"https:\/\/laravel.com\/docs\/7.x\/controllers","date":"date","creator":"john"}`
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 使用短網址
+#### Request
+`curl -X GET 'http://127.0.0.1:8000/5'`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#### Response
+重新導向至對應網址
+```
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='https://laravel.com/docs/7.x/controllers'" />
 
-## Learning Laravel
+        <title>Redirecting to https://laravel.com/docs/7.x/controllers</title>
+    </head>
+    <body>
+        Redirecting to <a href="https://laravel.com/docs/7.x/controllers">https://laravel.com/docs/7.x/controllers</a>.
+    </body>
+</html>
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 列出短網址
+#### Request
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+`curl -X GET 'http://127.0.0.1:8000/urls'`
+#### Response
+```
+[
+{
+"urlSequence":"2",
+"url":"https:\/\/laravel.com\/docs\/7.x\/controllers",
+"date":"date",
+"creator":"john"
+},
+{
+"urlSequence":"5",
+"url":"https:\/\/laravel.com\/docs\/7.x\/controllers",
+"date":"date",
+"creator":"john"
+},
+{
+"urlSequence":"1",
+"url":"https:\/\/laravel.com\/docs\/7.x\/controllers",
+"date":"date",
+"creator":"john"
+},
+{
+"urlSequence":"4",
+"url":"https:\/\/laravel.com\/docs\/7.x\/controllers",
+"date":"date",
+"creator":"john"
+},
+{
+"urlSequence":"3",
+"url":"https:\/\/laravel.com\/docs\/7.x\/controllers",
+"date":"date",
+"creator":"john"
+}
+]
+```
 
-## Laravel Sponsors
+## TODO
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- [x] 建立短網址
+- [x] 使用短網址跳轉
+- [x] 列出短網址
+- [ ] 網址合法性檢查
+- [ ] URL 相關操作獨立為 Service
+- [ ] 調整 Redis key 結構
+- [ ] 使用 ＣronJob 同步 queue 回 DB
+- [ ] 可自訂短網址
+- [ ] 環境建置
+- [ ] 加入測試
+- [ ] 提供前台介面
+- [ ] 提供後台審核功能
